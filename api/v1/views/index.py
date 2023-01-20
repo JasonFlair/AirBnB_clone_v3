@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """blueprint index?"""
 import api.v1.views
-from json import jsonify
+from flask import jsonify
 
 app_views = api.v1.views.app_views
 
