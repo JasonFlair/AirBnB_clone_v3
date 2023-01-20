@@ -79,6 +79,7 @@ class DBStorage:
         for a_class in classes:
             if cls == a_class:
                 results = self.__session.query(cls).all()
+                print(results)
                 for row in results:
                     print(row)
 
