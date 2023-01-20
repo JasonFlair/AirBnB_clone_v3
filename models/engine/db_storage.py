@@ -79,7 +79,9 @@ class DBStorage:
         for a_class in classes:
             if cls == classes[a_class]:
                 results = self.__session.query(cls).all()
-                print(results[0]['id'])
+                for row in results:
+                    if row.id == id:
+                        return(row)
 
     def count(self, cls=None):
         if cls:
