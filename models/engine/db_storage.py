@@ -89,5 +89,5 @@ class DBStorage:
         else:
             total_count = 0
             for a_class in classes:
-                count = self.__session.query(a_class).count()
+                count = self.__session.query(classes[a_class]).count()
                 total_count += count
