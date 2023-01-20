@@ -28,3 +28,4 @@ def return_stats():
     stats_dict = {"amenities": amenity_count, "cities": city_count,
                   "places": place_count, "reviews": review_count,
                   "states": state_count, "users": user_count}
+    return jsonify(stats_dict)
