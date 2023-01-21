@@ -29,3 +29,9 @@ def return_stats():
                   "places": place_count, "reviews": review_count,
                   "states": state_count, "users": user_count}
     return jsonify(stats_dict)
+
+
+@app_views.errorhandler(404)
+def page_not_found(error):
+    error_dict = {"error": "Not found"}
+    return jsonify(error_dict)
