@@ -13,4 +13,4 @@ def get_states():
     for state in all_states:
         state_dict = state.to_dict()
         results.append(state_dict)
-    print(jsonify(results))
+    return jsonify(results)
