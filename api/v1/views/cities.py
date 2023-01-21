@@ -8,7 +8,7 @@ from models import storage
 
 
 @app_views.route("/states/<state_id>/cities", strict_slashes=False)
-def get_cities():
+def get_cities(state_id):
     """gets all cities"""
     state = storage.get(State, state_id)
     if not state:
