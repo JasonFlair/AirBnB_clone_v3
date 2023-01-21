@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """blueprint index?"""
 from api.v1.views import app_views
-from flask import jsonify, request
+from flask import jsonify, request, Flask
 from models import storage
 from models.amenity import Amenity
 from models.city import City
@@ -9,6 +9,8 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+
+app = Flask(__name__)
 
 
 @app_views.route("/status")
@@ -31,7 +33,7 @@ def return_stats():
     return jsonify(stats_dict)
 
 
-@app_views.errorhandler(404)
+@app.errorhandler(404)
 def page_not_found(error):
     error_dict = {"error": "Not found"}
     if request.path.startswith('/api/'):
