@@ -2,7 +2,6 @@
 """blueprint index?"""
 from api.v1.views import app_views
 from flask import jsonify
-from models.base_model import to_dict
 from models.state import State
 from models import storage
 
