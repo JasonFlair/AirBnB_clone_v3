@@ -19,9 +19,7 @@ def get_states():
 @app_views.route("/states/<state_id>", strict_slashes=False)
 def get_one_state(state_id):
     all_states = storage.all(State).values()
-    result = []
     for state in all_states:
         state_dict = state.to_dict()
-        if state_dict.id == state_id:
-            result.append(state_dict)
-    return jsonify(result)
+        if state_dict["id"] == state_id:
+            return jsonify(state_dict)
