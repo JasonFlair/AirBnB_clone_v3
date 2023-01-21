@@ -54,6 +54,7 @@ def create_state():
     data["updated_at"] = datetime.now()
     data["id"] = str(uuid.uuid4())
 
-    storage.new(data)
+    state = State(**json_data)
+    storage.new(state)
     storage.save()
     return data
