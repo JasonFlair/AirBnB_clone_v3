@@ -31,14 +31,12 @@ def get_one_state(state_id):
 
 @app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
 def delete_state(state_id):
-    all_states = storage.all(State).values()
-    for state in all_states:
-        state_dict = state.to_dict()
-        if state_dict["id"] == state_id:
-            storage.delete(state_dict)
-            storage.save()
-            return make_response(jsonify({}), 200)
-    abort(404, "Not found")
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404, "Not found")
+    storage.delete(state)
+    storage.save()
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route("/states", methods=['POST'], strict_slashes=False)
