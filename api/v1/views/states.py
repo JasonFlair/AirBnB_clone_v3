@@ -50,8 +50,8 @@ def create_state():
         abort(400, "Not a JSON")
 
     data["__class__"] = "State"
-    data["created_at"] = datetime.now()
-    data["updated_at"] = datetime.now()
+    data["created_at"] = datetime.utcnow()
+    data["updated_at"] = datetime.utcnow()
     data["id"] = str(uuid.uuid4())
 
     state = State(**data)
