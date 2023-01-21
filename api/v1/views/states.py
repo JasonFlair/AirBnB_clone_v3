@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 import uuid
 
+
 @app_views.route("/states", strict_slashes=False)
 def get_states():
     all_states = storage.all(State).values()
@@ -45,20 +46,19 @@ def create_state():
     data = request.get_json()
     if 'name' not in data:
         abort(make_response(jsonify(message="Missing name"), 400))
-    else:
-        try:
-            json_data = json.loads(data)
-            # check that data is in valid JSON format
+    try:
+        json_data = json.loads(data)
+        # check that data is in valid JSON format
 
-            json_data["__class__"] = "State"
-            json_data["created_at"] = datetime.now()
-            json_data["updated_at"] = datetime.now()
-            json_data["id"] = str(uuid.uuid4())
+    except json.decoder.JSONDecodeError as e:
+        # Data is not in valid JSON format
+        abort(400, "Not a JSON")
 
-            storage.new(json_data)
-            storage.save()
-            return json_data
-        except json.decoder.JSONDecodeError as e:
-            # Data is not in valid JSON format
-            abort(400, "Not a JSON")
+    data["__class__"] = "State"
+    data["created_at"] = datetime.now()
+    data["updated_at"] = datetime.now()
+    data["id"] = str(uuid.uuid4())
 
+    storage.new(data)
+    storage.save()
+    return data
