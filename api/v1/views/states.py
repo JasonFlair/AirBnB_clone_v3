@@ -34,5 +34,5 @@ def delete_state(state_id):
         if state_dict["id"] == state_id:
             del all_states[state]
             storage.save()
-        return jsonify({})
+            return jsonify({})
     abort(404, "Not found")
