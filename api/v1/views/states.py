@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """blueprint index?"""
 from api.v1.views import app_views
-from flask import jsonify, request, abort
+from flask import jsonify, request, abort, make_response
 from models.state import State
 from models import storage
-
+from datetime import datetime
+import json
+import uuid
 
 @app_views.route("/states", strict_slashes=False)
 def get_states():
@@ -36,3 +38,27 @@ def delete_state(state_id):
             storage.save()
             return jsonify({})
     abort(404, "Not found")
+
+
+@app_views.route("/states", methods=['POST'], strict_slashes=False)
+def create_state():
+    data = request.get_json()
+    if 'name' not in data:
+        abort(make_response(jsonify(message="Missing name"), 400))
+    else:
+        try:
+            json_data = json.loads(data)
+            # check that data is in valid JSON format
+
+            json_data["__class__"] = "State"
+            json_data["created_at"] = datetime.now()
+            json_data["updated_at"] = datetime.now()
+            json_data["id"] = str(uuid.uuid4())
+
+            storage.new(json_data)
+            storage.save()
+            return json_data
+        except json.decoder.JSONDecodeError as e:
+            # Data is not in valid JSON format
+            abort(400, "Not a JSON")
+
