@@ -10,8 +10,6 @@ from models.review import Review
 from models.state import State
 from models.user import User
 
-app = Flask(__name__)
-
 
 @app_views.route("/status")
 def return_status():
@@ -33,10 +31,11 @@ def return_stats():
     return jsonify(stats_dict)
 
 
+from api.v1 import *
+
+
 @app.errorhandler(404)
-@app_views.route("/")
 def page_not_found(error):
-    print("omoooo")
-    error = {"error": "Not found"}
-    if request.path.startswith('/api/v1/'):
+    error_dict = {"error": "Not found"}
+    if request.path.startswith('/api/'):
         return jsonify(error_dict)
