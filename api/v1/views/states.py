@@ -46,12 +46,7 @@ def create_state():
     data = request.get_json()
     if 'name' not in data:
         abort(make_response(jsonify(message="Missing name"), 400))
-    try:
-        json_data = json.loads(data)
-        # check that data is in valid JSON format
-
-    except json.decoder.JSONDecodeError as e:
-        # Data is not in valid JSON format
+    if not isinstance(data, dict):
         abort(400, "Not a JSON")
 
     data["__class__"] = "State"
