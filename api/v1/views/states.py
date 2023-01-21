@@ -26,7 +26,7 @@ def get_one_state(state_id):
     abort(404, "Not found")
 
 
-@app_views.route("/states/<state_id>", methods=['DELETE'] strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
 def delete_state(state_id):
     all_states = storage.all(State).values()
     for state in all_states:
