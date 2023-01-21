@@ -13,8 +13,7 @@ def get_cities(state_id):
     state = storage.get(State, state_id)
     if not state:
         abort(404)
-    for city in state.cities:
-        print(city)
+    return jsonify(state.cities)
 
 
 @app_views.route("/states/<state_id>", strict_slashes=False)
