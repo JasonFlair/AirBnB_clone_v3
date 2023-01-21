@@ -9,7 +9,7 @@ from models import storage
 
 @app_views.route("/states/<state_id>/cities", strict_slashes=False)
 def get_cities(state_id):
-    """gets all cities"""
+    """gets all cities for a state"""
     state = storage.get(State, state_id)
     if not state:
         abort(404)
@@ -19,3 +19,10 @@ def get_cities(state_id):
     return jsonify(list_of_cities)
 
 
+@app_views.route("/cities/<city_id>", strict_slashes=False)
+def get_city(city_id):
+    """gets city specified"""
+    city = storage.get(City, city_id)
+    if not city:
+        abort(404)
+    return jsonify(city.to_dict)
