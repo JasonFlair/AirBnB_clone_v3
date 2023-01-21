@@ -11,6 +11,8 @@ from models.state import State
 from models.user import User
 
 
+app = Flask(__name__)
+
 @app_views.route("/status")
 def return_status():
     return jsonify({"status": "OK"})
@@ -31,7 +33,7 @@ def return_stats():
     return jsonify(stats_dict)
 
 
-@app_views.app.errorhandler(404)
+@app.errorhandler(404)
 def page_not_found(error):
     error_dict = {"error": "Not found"}
     if request.path.startswith('/api/'):
