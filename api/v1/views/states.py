@@ -57,4 +57,4 @@ def create_state():
     state = State(**data)
     storage.new(state)
     storage.save()
-    return data
+    return jsonify(data)
