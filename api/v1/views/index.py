@@ -37,6 +37,6 @@ def return_stats():
 @app_views.route("/")
 def page_not_found(error):
     print("omoooo")
-    error_dict = {"error": "Not found"}
+    error = {"error": "Not found"}
     if request.path.startswith('/api/v1/'):
         return jsonify(error_dict)
