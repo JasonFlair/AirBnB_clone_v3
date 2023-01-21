@@ -19,7 +19,7 @@ def get_cities(state_id):
     return jsonify(list_of_cities)
 
 
-@app_views.route("/states/<state_id>", strict_slashes=False)
+# @app_views.route("/states/<state_id>", strict_slashes=False)
 def get_one_state(state_id):
     """shows state object with the id specified"""
     all_states = storage.all(State).values()
