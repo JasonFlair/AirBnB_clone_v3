@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""blueprint index?"""
+"""state blueprint"""
 from api.v1.views import app_views
 from flask import jsonify, request, abort, make_response
 from models.state import State
@@ -40,7 +40,7 @@ def delete_state(state_id):
 
 @app_views.route("/states", methods=['POST'], strict_slashes=False)
 def create_state():
-    """deletes state object"""
+    """creates state object"""
     data = request.get_json()
     if 'name' not in data:
         abort(400, description="Missing name")
