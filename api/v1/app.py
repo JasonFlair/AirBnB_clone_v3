@@ -4,6 +4,7 @@ from models import storage
 from api.v1.views import app_views
 from os import getenv
 from flask import Flask
+from flask import jsonify, request
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -12,6 +13,13 @@ app.register_blueprint(app_views)
 @app.teardown_appcontext
 def teardown(exception):
     storage.close()
+
+
+@app_views.errorhandler(404)
+def page_not_found(error):
+    error_dict = {"error": "Not found"}
+    if request.path.startswith('/api/'):
+        return jsonify(error_dict)
 
 
 if __name__ == "__main__":
