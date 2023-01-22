@@ -41,22 +41,21 @@ def delete_user(user_id):
 @app_views.route("/users", methods=['POST'], strict_slashes=False)
 def create_user():
     """creates user object"""
-    try:
-        data = request.get_json()
-        if "name" not in data:
-            abort(400, description="Missing name")
-        if "email" not in data:
-            abort(400, description="Missing email")
-        if "password" not in data:
-            abort(400, description="Missing password")
-
-        user = User(**data)
-        # the init handles the created_at and updated_at data
-        storage.new(user)
-        storage.save()
-        return make_response(jsonify(user.to_dict()), 201)
-    except BadRequest:
+    data = request.get_json()
+    if not data:
         abort(400, description="Not a JSON")
+    if "name" not in data:
+        abort(400, description="Missing name")
+    if "email" not in data:
+        abort(400, description="Missing email")
+    if "password" not in data:
+        abort(400, description="Missing password")
+
+    user = User(**data)
+    # the init handles the created_at and updated_at data
+    storage.new(user)
+    storage.save()
+    return make_response(jsonify(user.to_dict()), 201)
 
 
 @app_views.route("/users/<user_id>", methods=['PUT'], strict_slashes=False)
