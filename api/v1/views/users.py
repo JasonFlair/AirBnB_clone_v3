@@ -43,20 +43,20 @@ def create_user():
     """creates user object"""
     try:
         data = request.get_json()
+        if 'name' not in data:
+            abort(400, "Missing name")
+        if 'email' not in data:
+            abort(400, "Missing email")
+        if 'password' not in data:
+            abort(400, "Missing password")
+
+        user = User(**data)
+        # the init handles the created_at and updated_at data
+        storage.new(user)
+        storage.save()
+        return make_response(jsonify(data), 201)
     except BadRequest:
         abort(400, "Not a JSON")
-    if 'name' not in data:
-        return make_response("Missing name", 400)
-    if 'email' not in data:
-        return make_response("Missing email", 400)
-    if 'password' not in data:
-        return make_response("Missing password", 400)
-
-    user = User(**data)
-    # the init handles the created_at and updated_at data
-    storage.new(user)
-    storage.save()
-    return make_response(jsonify(data), 201)
 
 
 @app_views.route("/users/<user_id>", methods=['PUT'], strict_slashes=False)
@@ -64,16 +64,16 @@ def update_user(user_id):
     """updates user object"""
     try:
         data = request.get_json()
+        user = storage.get(User, user_id)
+        if not user:
+            abort(404)
+
+        ignore = ['id', 'email', 'created_at', 'updated_at']
+
+        for key, value in data.items():
+            if key not in ignore:
+                setattr(user, key, value)
+        storage.save()
+        return make_response(jsonify(user.to_dict()), 200)
     except BadRequest:
         abort(400, "Not a JSON")
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-
-    ignore = ['id', 'email', 'created_at', 'updated_at']
-
-    for key, value in data.items():
-        if key not in ignore:
-            setattr(user, key, value)
-    storage.save()
-    return make_response(jsonify(user.to_dict()), 200)
