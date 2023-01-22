@@ -48,9 +48,9 @@ def create_review(place_id):
     try:
         data = request.get_json()
     except BadRequest:
-        return make_response("Not a JSON", 400)
+        abort(400, "Not a JSON")
     if 'name' not in data:
-        return make_response("Missing name", 400)
+        abort(400, "Missing name")
     place = storage.get(Place, place_id)
     if not place:
         abort(404)

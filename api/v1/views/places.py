@@ -46,27 +46,27 @@ def create_place(city_id):
     """creates a place object"""
     try:
         place_data = request.get_json()
-    except BadRequest:
-        return make_response("Not a JSON", 400)
-    city = storage.get(City, city_id)
-    if not city:
-        abort(404)
-    if 'user_id' in place_data:
-        user_id = place_data['user_id']
-        user = storage.get(User, user_id)
-        if not user:
+        city = storage.get(City, city_id)
+        if not city:
             abort(404)
-    if 'name' not in place_data:
-        return make_response("Missing name", 400)
-    if 'user_id' not in place_data:
-        return make_response("Missing user_id", 400)
+        if 'user_id' in place_data:
+            user_id = place_data['user_id']
+            user = storage.get(User, user_id)
+            if not user:
+                abort(404)
+        if 'name' not in place_data:
+            abort(400, "Missing name")
+        if 'user_id' not in place_data:
+            abort(400, "Missing user_id")
 
-    place_data.update({"city_id": city_id})
+        place_data.update({"city_id": city_id})
 
-    new_place = Place(**place_data)
-    storage.new(new_place)
-    storage.save()
-    return make_response(jsonify(city.to_dict()), 201)
+        new_place = Place(**place_data)
+        storage.new(new_place)
+        storage.save()
+        return make_response(jsonify(city.to_dict()), 201)
+    except BadRequest:
+        abort(400, "Not a JSON")
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'],
@@ -79,13 +79,12 @@ def update_place(place_id):
 
     try:
         place_data = request.get_json()
+        for k, v in place_data.items():
+            if k not in ['id', 'user_id',
+                         'created_at', 'updated_at']:
+                setattr(place, k, v)
+
+        storage.save()
+        return make_response(jsonify(place.to_dict()), 200)
     except BadRequest:
-        return make_response("Not a JSON", 400)
-
-    for k, v in place_data.items():
-        if k not in ['id', 'user_id',
-                     'created_at', 'updated_at']:
-            setattr(place, k, v)
-
-    storage.save()
-    return make_response(jsonify(place.to_dict()), 200)
+        abort(400, "Not a JSON")

@@ -60,16 +60,16 @@ def update_amenity(amenity_id):
     """updates state object"""
     try:
         data = request.get_json()
+        amenity = storage.get(Amenity, amenity_id)
+        if not amenity:
+            abort(404)
+
+        ignore = ['id', 'created_at', 'updated_at']
+
+        for key, value in data.items():
+            if key not in ignore:
+                setattr(amenity, key, value)
+        storage.save()
+        return make_response(jsonify(amenity.to_dict()), 200)
     except BadRequest:
-        return abort(400, description="Not a JSON")
-    amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
-        abort(404)
-
-    ignore = ['id', 'created_at', 'updated_at']
-
-    for key, value in data.items():
-        if key not in ignore:
-            setattr(amenity, key, value)
-    storage.save()
-    return make_response(jsonify(amenity.to_dict()), 200)
+        abort(400, description="Not a JSON")

@@ -44,7 +44,7 @@ def create_user():
     try:
         data = request.get_json()
     except BadRequest:
-        return make_response("Not a JSON", 400)
+        abort(400, "Not a JSON")
     if 'name' not in data:
         return make_response("Missing name", 400)
     if 'email' not in data:
@@ -65,7 +65,7 @@ def update_user(user_id):
     try:
         data = request.get_json()
     except BadRequest:
-        return make_response("Not a JSON", 400)
+        abort(400, "Not a JSON")
     user = storage.get(User, user_id)
     if not user:
         abort(404)
