@@ -55,7 +55,7 @@ def create_user():
 
 
 @app_views.route("/users/<user_id>", methods=['PUT'], strict_slashes=False)
-def update_amenity(user_id):
+def update_user(user_id):
     """updates user object"""
     data = request.get_json()
     if not data:
