@@ -20,12 +20,11 @@ def get_states():
 @app_views.route("/states/<state_id>", methods=['GET'], strict_slashes=False)
 def get_one_state(state_id):
     """shows state object with the id specified"""
-    all_states = storage.all(State).values()
-    for state in all_states:
-        state_dict = state.to_dict()
-        if state_dict["id"] == state_id:
-            return jsonify(state_dict)
-    abort(404)
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
+    state_dict = state.to_dict()
+    return jsonify(state_dict)
 
 
 @app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
@@ -49,9 +48,11 @@ def create_state():
 
         state = State(**data)
         # the init handles the created_at and updated_at data
-        storage.new(state)
-        storage.save()
-        return make_response(jsonify(data), 201)
+        state.save()
+        """calls the save function on itself, from basemodel 
+           which creates a new instance and saves it
+           check user for a less confusing method of saving"""
+        return make_response(jsonify(state.to_dict()), 201)
     except BadRequest:
         abort(400, description="Not a JSON")
 

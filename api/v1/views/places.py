@@ -64,7 +64,7 @@ def create_place(city_id):
         new_place = Place(**place_data)
         storage.new(new_place)
         storage.save()
-        return make_response(jsonify(city.to_dict()), 201)
+        return make_response(jsonify(new_place.to_dict()), 201)
     except BadRequest:
         abort(400, description="Not a JSON")
 

@@ -60,7 +60,7 @@ def create_review(place_id):
         # the init handles the created_at and updated_at data
         storage.new(review)
         storage.save()
-        return make_response(jsonify(data), 201)
+        return make_response(jsonify(review.to_dict()), 201)
     except BadRequest:
         abort(400, description="Not a JSON")
 

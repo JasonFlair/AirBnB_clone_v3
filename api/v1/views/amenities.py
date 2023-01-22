@@ -52,7 +52,7 @@ def create_amenity():
     # the init handles the created_at and updated_at data
     storage.new(amenity)
     storage.save()
-    return make_response(jsonify(data), 201)
+    return make_response(jsonify(amenity.to_dict()), 201)
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'], strict_slashes=False)

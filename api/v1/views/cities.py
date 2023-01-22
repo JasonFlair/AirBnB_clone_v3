@@ -56,7 +56,8 @@ def create_city(state_id):
         # the init handles the created_at and updated_at data
         storage.new(city)
         storage.save()
-        return make_response(jsonify(data), 201)
+        return make_response(jsonify(city.to_dict()), 201)
+        # returns the dict representation of the new city
     except BadRequest:
         abort(400, description="Not a JSON")
 
