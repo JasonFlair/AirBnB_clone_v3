@@ -47,17 +47,19 @@ def create_review(place_id):
     """Creates state object"""
     try:
         data = request.get_json()
+        if "text" not in data:
+            abort(400, "Missing text")
+        if "user_id" not in data:
+            abort(400, "Missing user_id")
+        place = storage.get(Place, place_id)
+        if not place:
+            abort(404)
+        data.update({"place_id": place_id})
+
+        review = Review(**data)
+        # the init handles the created_at and updated_at data
+        storage.new(review)
+        storage.save()
+        return make_response(jsonify(data), 201)
     except BadRequest:
         abort(400, "Not a JSON")
-    if 'name' not in data:
-        abort(400, "Missing name")
-    place = storage.get(Place, place_id)
-    if not place:
-        abort(404)
-    data.update({"place_id": place_id})
-
-    review = Review(**data)
-    # the init handles the created_at and updated_at data
-    storage.new(review)
-    storage.save()
-    return make_response(jsonify(data), 201)

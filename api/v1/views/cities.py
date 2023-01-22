@@ -70,7 +70,7 @@ def update_city(city_id):
         if not city:
             abort(404)
 
-        ignore = ['id', 'created_at', 'updated_at']
+        ignore = ["id", "state_id", "created_at", "updated_at"]
 
         for key, value in data.items():
             if key not in ignore:

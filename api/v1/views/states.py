@@ -65,7 +65,7 @@ def update_state(state_id):
         if not state:
             abort(404)
 
-        ignore = ['id', 'created_at', 'updated_at']
+        ignore = ["id", "created_at", "updated_at"]
 
         for key, value in data.items():
             if key not in ignore:

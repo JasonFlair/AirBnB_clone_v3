@@ -43,11 +43,11 @@ def create_user():
     """creates user object"""
     try:
         data = request.get_json()
-        if 'name' not in data:
+        if "name" not in data:
             abort(400, "Missing name")
-        if 'email' not in data:
+        if "email" not in data:
             abort(400, "Missing email")
-        if 'password' not in data:
+        if "password" not in data:
             abort(400, "Missing password")
 
         user = User(**data)
@@ -68,7 +68,7 @@ def update_user(user_id):
         if not user:
             abort(404)
 
-        ignore = ['id', 'email', 'created_at', 'updated_at']
+        ignore = ["id", "email", "created_at", "updated_at"]
 
         for key, value in data.items():
             if key not in ignore:
