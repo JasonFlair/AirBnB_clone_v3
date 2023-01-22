@@ -43,23 +43,23 @@ def delete_city(city_id):
 @app_views.route("/states/<state_id>/cities", methods=['POST'], strict_slashes=False)
 def create_city(state_id):
     """Creates city object"""
-    try:
-        data = request.get_json()
-        if 'name' not in data:
-            abort(400, description="Not a JSON")
-        state = storage.get(State, state_id)
-        if not state:
-            abort(404)
-        data.update({"state_id": state_id})
-
-        city = City(**data)
-        # the init handles the created_at and updated_at data
-        storage.new(city)
-        storage.save()
-        return make_response(jsonify(city.to_dict()), 201)
-        # returns the dict representation of the new city
-    except BadRequest:
+    data = request.get_json()
+    if not data:
         abort(400, description="Not a JSON")
+        # if json request doesnt work, abort 400
+    if 'name' not in data:
+        abort(400, description="Not a JSON")
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
+    data.update({"state_id": state_id})
+
+    city = City(**data)
+    # the init handles the created_at and updated_at data
+    storage.new(city)
+    storage.save()
+    return make_response(jsonify(city.to_dict()), 201)
+    # returns the dict representation of the new city
 
 
 @app_views.route("/cities/<city_id>", methods=['PUT'], strict_slashes=False)

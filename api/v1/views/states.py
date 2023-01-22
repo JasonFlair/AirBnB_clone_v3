@@ -41,20 +41,19 @@ def delete_state(state_id):
 @app_views.route("/states", methods=['POST'], strict_slashes=False)
 def create_state():
     """creates state object"""
-    try:
-        data = request.get_json()
-        if 'name' not in data:
-            abort(400, description="Missing name")
-
-        state = State(**data)
-        # the init handles the created_at and updated_at data
-        state.save()
-        """calls the save function on itself, from basemodel 
-           which creates a new instance and saves it
-           check user for a less confusing method of saving"""
-        return make_response(jsonify(state.to_dict()), 201)
-    except BadRequest:
+    data = request.get_json()
+    if not data:
         abort(400, description="Not a JSON")
+    if 'name' not in data:
+        abort(400, description="Missing name")
+
+    state = State(**data)
+    # the init handles the created_at and updated_at data
+    state.save()
+    """calls the save function on itself, from basemodel 
+       which creates a new instance and saves it
+       check user for a less confusing method of saving"""
+    return make_response(jsonify(state.to_dict()), 201)
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)

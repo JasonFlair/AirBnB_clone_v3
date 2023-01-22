@@ -45,24 +45,23 @@ def delete_review(review_id):
 @app_views.route("/places/<place_id>/reviews", methods=['POST'], strict_slashes=False)
 def create_review(place_id):
     """Creates state object"""
-    try:
-        data = request.get_json()
-        if "text" not in data:
-            abort(400, description="Missing text")
-        if "user_id" not in data:
-            abort(400, description="Missing user_id")
-        place = storage.get(Place, place_id)
-        if not place:
-            abort(404)
-        data.update({"place_id": place_id})
-
-        review = Review(**data)
-        # the init handles the created_at and updated_at data
-        storage.new(review)
-        storage.save()
-        return make_response(jsonify(review.to_dict()), 201)
-    except BadRequest:
+    data = request.get_json()
+    if not data:
         abort(400, description="Not a JSON")
+    if "text" not in data:
+        abort(400, description="Missing text")
+    if "user_id" not in data:
+        abort(400, description="Missing user_id")
+    place = storage.get(Place, place_id)
+    if not place:
+        abort(404)
+    data.update({"place_id": place_id})
+
+    review = Review(**data)
+    # the init handles the created_at and updated_at data
+    storage.new(review)
+    storage.save()
+    return make_response(jsonify(review.to_dict()), 201)
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
