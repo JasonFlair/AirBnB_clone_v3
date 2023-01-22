@@ -44,9 +44,13 @@ def create_user():
     try:
         data = request.get_json()
     except BadRequest:
-        return abort(400, description="Not a JSON")
+        return make_response("Not a JSON", 400)
     if 'name' not in data:
-        abort(400, description="Missing name")
+        return make_response("Missing name", 400)
+    if 'email' not in data:
+        return make_response("Missing email", 400)
+    if 'password' not in data:
+        return make_response("Missing password", 400)
 
     user = User(**data)
     # the init handles the created_at and updated_at data
@@ -61,12 +65,12 @@ def update_user(user_id):
     try:
         data = request.get_json()
     except BadRequest:
-        return abort(400, description="Not a JSON")
+        return make_response("Not a JSON", 400)
     user = storage.get(User, user_id)
     if not user:
         abort(404)
 
-    ignore = ['id', 'created_at', 'updated_at']
+    ignore = ['id', 'email', 'created_at', 'updated_at']
 
     for key, value in data.items():
         if key not in ignore:
