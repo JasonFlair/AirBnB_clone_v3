@@ -47,7 +47,7 @@ def create_city(state_id):
         abort(400, description="Missing name")
     if not data:
         # if data is not gotten from the request.get_json()
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")
     data.update({"state_id": state_id})
 
     city = City(**data)
