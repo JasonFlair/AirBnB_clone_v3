@@ -6,7 +6,7 @@ from models import storage
 from models.amenity import Amenity
 
 
-@app_views.route("/amenities/<amenity_id>", strict_slashes=False)
+@app_views.route("/amenities/<amenity_id>", methods=['GET'], strict_slashes=False)
 def get_amenity(amenity_id):
     """gets amenity specified"""
     amenity = storage.get(Amenity, amenity_id)
@@ -15,7 +15,7 @@ def get_amenity(amenity_id):
     return jsonify(amenity.to_dict())
 
 
-@app_views.route("/amenities", strict_slashes=False)
+@app_views.route("/amenities", methods=['GET'], strict_slashes=False)
 def get_amenities():
     """get all amenities"""
     all_amenities = storage.all(Amenity).values()
