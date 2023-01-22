@@ -42,12 +42,12 @@ def delete_city(city_id):
 @app_views.route("/states/<state_id>/cities", methods=['POST'], strict_slashes=False)
 def create_city(state_id):
     """Creates state object"""
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except:
+        return abort(400, description="Not a JSON")
     if 'name' not in data:
         abort(400, description="Missing name")
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, description="Not a JSON")
     data.update({"state_id": state_id})
 
     city = City(**data)
