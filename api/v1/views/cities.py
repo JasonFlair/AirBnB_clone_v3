@@ -46,7 +46,7 @@ def create_city(state_id):
     try:
         data = request.get_json()
         if 'name' not in data:
-            return make_response("Missing name", 400)
+            abort(400, "Not a JSON")
         state = storage.get(State, state_id)
         if not state:
             abort(404)
