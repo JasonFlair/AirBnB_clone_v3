@@ -44,7 +44,7 @@ def delete_review(review_id):
 
 @app_views.route("/places/<place_id>/reviews", methods=['POST'], strict_slashes=False)
 def create_review(place_id):
-    """Creates state object"""
+    """Creates review object"""
     data = request.get_json()
     if not data:
         abort(400, description="Not a JSON")
@@ -52,6 +52,9 @@ def create_review(place_id):
         abort(400, description="Missing text")
     if "user_id" not in data:
         abort(400, description="Missing user_id")
+    user = storage.get(User, data['user_id'])
+    if not user:
+        abort(404)
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
@@ -66,7 +69,7 @@ def create_review(place_id):
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 def update_review(review_id):
-    """updates user object"""
+    """updates review object"""
     try:
         review = storage.get(Review, review_id)
 
