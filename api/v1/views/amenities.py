@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify, request, abort, make_response
 from models import storage
 from models.amenity import Amenity
+from werkzeug.exceptions import BadRequest
 
 
 @app_views.route("/amenities/<amenity_id>", methods=['GET'], strict_slashes=False)
@@ -40,12 +41,12 @@ def delete_amenity(amenity_id):
 @app_views.route("/amenities", methods=['POST'], strict_slashes=False)
 def create_amenity():
     """creates amenity object"""
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     if 'name' not in data:
         abort(400, description="Missing name")
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, "Not a JSON")
 
     amenity = Amenity(**data)
     # the init handles the created_at and updated_at data
@@ -57,10 +58,10 @@ def create_amenity():
 @app_views.route("/amenities/<amenity_id>", methods=['PUT'], strict_slashes=False)
 def update_amenity(amenity_id):
     """updates state object"""
-    data = request.get_json()
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, description="Not a JSON")
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)

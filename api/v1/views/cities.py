@@ -5,6 +5,7 @@ from flask import jsonify, request, abort, make_response
 from models.state import State
 from models.city import City
 from models import storage
+from werkzeug.exceptions import BadRequest
 
 
 @app_views.route("/states/<state_id>/cities", methods=['GET'], strict_slashes=False)
@@ -44,7 +45,7 @@ def create_city(state_id):
     """Creates state object"""
     try:
         data = request.get_json()
-    except:
+    except BadRequest:
         return abort(400, description="Not a JSON")
     if 'name' not in data:
         abort(400, description="Missing name")
@@ -60,10 +61,10 @@ def create_city(state_id):
 @app_views.route("/cities/<city_id>", methods=['PUT'], strict_slashes=False)
 def update_city(city_id):
     """updates city object"""
-    data = request.get_json()
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, description="Not a JSON")
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     city = storage.get(City, city_id)
     if not city:
         abort(404)

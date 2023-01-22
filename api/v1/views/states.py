@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify, request, abort, make_response
 from models.state import State
 from models import storage
+from werkzeug.exceptions import BadRequest
 
 
 @app_views.route("/states", methods=['GET'], strict_slashes=False)
@@ -41,12 +42,12 @@ def delete_state(state_id):
 @app_views.route("/states", methods=['POST'], strict_slashes=False)
 def create_state():
     """creates state object"""
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     if 'name' not in data:
         abort(400, description="Missing name")
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, "Not a JSON")
 
     state = State(**data)
     # the init handles the created_at and updated_at data
@@ -58,10 +59,10 @@ def create_state():
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """updates state object"""
-    data = request.get_json()
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, description="Not a JSON")
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     state = storage.get(State, state_id)
     if not state:
         abort(404)

@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify, request, abort, make_response
 from models.user import User
 from models import storage
+from werkzeug.exceptions import BadRequest
 
 
 @app_views.route("/users/<user_id>", strict_slashes=False)
@@ -40,12 +41,12 @@ def delete_user(user_id):
 @app_views.route("/users", methods=['POST'], strict_slashes=False)
 def create_user():
     """creates user object"""
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     if 'name' not in data:
         abort(400, description="Missing name")
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, "Not a JSON")
 
     user = User(**data)
     # the init handles the created_at and updated_at data
@@ -57,10 +58,10 @@ def create_user():
 @app_views.route("/users/<user_id>", methods=['PUT'], strict_slashes=False)
 def update_user(user_id):
     """updates user object"""
-    data = request.get_json()
-    if not data:
-        # if data is not gotten from the request.get_json()
-        abort(400, description="Not a JSON")
+    try:
+        data = request.get_json()
+    except BadRequest:
+        return abort(400, description="Not a JSON")
     user = storage.get(User, user_id)
     if not user:
         abort(404)
