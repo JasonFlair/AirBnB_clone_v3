@@ -14,17 +14,24 @@ cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
 @app.teardown_appcontext
 def teardown(exception):
+    """teardown storage after use"""
     storage.close()
 
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """error 404 handler"""
     error_dict = {"error": "Not found"}
     if request.path.startswith('/api/'):
         return jsonify(error_dict)
 
 
 if __name__ == "__main__":
-    HBNB_API_HOST = getenv('HBNB_API_HOST') or '0.0.0.0'
-    HBNB_API_PORT = getenv('HBNB_API_PORT') or 5000
-    app.run(host=HBNB_API_HOST, port=HBNB_API_PORT, threaded=True)
+    """ Main Function """
+    host = getenv('HBNB_API_HOST')
+    port = getenv('HBNB_API_PORT')
+    if not host:
+        host = '0.0.0.0'
+    if not port:
+        port = 5000
+    app.run(host=host, port=port, threaded=True)
