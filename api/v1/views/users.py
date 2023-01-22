@@ -44,11 +44,11 @@ def create_user():
     try:
         data = request.get_json()
         if "name" not in data:
-            abort(400, "Missing name")
+            abort(400, description="Missing name")
         if "email" not in data:
-            abort(400, "Missing email")
+            abort(400, description="Missing email")
         if "password" not in data:
-            abort(400, "Missing password")
+            abort(400, description="Missing password")
 
         user = User(**data)
         # the init handles the created_at and updated_at data
@@ -56,7 +56,7 @@ def create_user():
         storage.save()
         return make_response(jsonify(data), 201)
     except BadRequest:
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")
 
 
 @app_views.route("/users/<user_id>", methods=['PUT'], strict_slashes=False)
@@ -76,4 +76,4 @@ def update_user(user_id):
         storage.save()
         return make_response(jsonify(user.to_dict()), 200)
     except BadRequest:
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")

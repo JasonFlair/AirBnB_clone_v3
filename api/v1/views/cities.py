@@ -46,7 +46,7 @@ def create_city(state_id):
     try:
         data = request.get_json()
         if 'name' not in data:
-            abort(400, "Not a JSON")
+            abort(400, description="Not a JSON")
         state = storage.get(State, state_id)
         if not state:
             abort(404)
@@ -58,7 +58,7 @@ def create_city(state_id):
         storage.save()
         return make_response(jsonify(data), 201)
     except BadRequest:
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")
 
 
 @app_views.route("/cities/<city_id>", methods=['PUT'], strict_slashes=False)

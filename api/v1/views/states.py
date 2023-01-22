@@ -25,7 +25,7 @@ def get_one_state(state_id):
         state_dict = state.to_dict()
         if state_dict["id"] == state_id:
             return jsonify(state_dict)
-    abort(404, "Not found")
+    abort(404)
 
 
 @app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
@@ -45,7 +45,7 @@ def create_state():
     try:
         data = request.get_json()
         if 'name' not in data:
-            abort(400, "Missing name")
+            abort(400, description="Missing name")
 
         state = State(**data)
         # the init handles the created_at and updated_at data
@@ -53,7 +53,7 @@ def create_state():
         storage.save()
         return make_response(jsonify(data), 201)
     except BadRequest:
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
@@ -73,4 +73,4 @@ def update_state(state_id):
         storage.save()
         return make_response(jsonify(state.to_dict()), 200)
     except BadRequest:
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")

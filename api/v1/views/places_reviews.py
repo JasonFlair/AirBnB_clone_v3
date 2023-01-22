@@ -48,9 +48,9 @@ def create_review(place_id):
     try:
         data = request.get_json()
         if "text" not in data:
-            abort(400, "Missing text")
+            abort(400, description="Missing text")
         if "user_id" not in data:
-            abort(400, "Missing user_id")
+            abort(400, description="Missing user_id")
         place = storage.get(Place, place_id)
         if not place:
             abort(404)
@@ -62,4 +62,26 @@ def create_review(place_id):
         storage.save()
         return make_response(jsonify(data), 201)
     except BadRequest:
-        abort(400, "Not a JSON")
+        abort(400, description="Not a JSON")
+
+
+@app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
+def update_review(review_id):
+    """updates user object"""
+    try:
+        review = storage.get(Review, review_id)
+
+        if not review:
+            abort(404)
+
+        ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
+
+        data = request.get_json()
+        for key, value in data.items():
+            if key not in ignore:
+                setattr(review, key, value)
+        storage.save()
+        return make_response(jsonify(review.to_dict()), 200)
+    except BadRequest:
+        abort(400, description="Not a JSON")
+
