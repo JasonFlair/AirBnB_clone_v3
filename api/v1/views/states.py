@@ -50,9 +50,9 @@ def create_state():
     state = State(**data)
     # the init handles the created_at and updated_at data
     state.save()
-    """calls the save function on itself, from basemodel 
-       which creates a new instance and saves it
-       check user for a less confusing method of saving"""
+    """calls the save function on itself, from basemodel
+    which creates a new instance and saves it
+    check user for a less confusing method of saving"""
     return make_response(jsonify(state.to_dict()), 201)
 
 

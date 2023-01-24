@@ -8,7 +8,8 @@ from models import storage
 from werkzeug.exceptions import BadRequest
 
 
-@app_views.route("/states/<state_id>/cities", methods=['GET'], strict_slashes=False)
+@app_views.route("/states/<state_id>/cities",
+                 methods=['GET'], strict_slashes=False)
 def get_cities(state_id):
     """gets all cities for a state"""
     state = storage.get(State, state_id)
@@ -20,7 +21,8 @@ def get_cities(state_id):
     return jsonify(list_of_cities)
 
 
-@app_views.route("/cities/<city_id>", methods=['GET'], strict_slashes=False)
+@app_views.route("/cities/<city_id>",
+                 methods=['GET'], strict_slashes=False)
 def get_city(city_id):
     """gets city specified"""
     city = storage.get(City, city_id)
@@ -29,7 +31,8 @@ def get_city(city_id):
     return jsonify(city.to_dict())
 
 
-@app_views.route("/cities/<city_id>", methods=['DELETE'], strict_slashes=False)
+@app_views.route("/cities/<city_id>",
+                 methods=['DELETE'], strict_slashes=False)
 def delete_city(city_id):
     """deletes city object with the id specified"""
     city = storage.get(City, city_id)
@@ -40,7 +43,8 @@ def delete_city(city_id):
     return make_response(jsonify({}), 200)
 
 
-@app_views.route("/states/<state_id>/cities", methods=['POST'], strict_slashes=False)
+@app_views.route("/states/<state_id>/cities",
+                 methods=['POST'], strict_slashes=False)
 def create_city(state_id):
     """Creates city object"""
     data = request.get_json()
@@ -62,7 +66,8 @@ def create_city(state_id):
     # returns the dict representation of the new city
 
 
-@app_views.route("/cities/<city_id>", methods=['PUT'], strict_slashes=False)
+@app_views.route("/cities/<city_id>",
+                 methods=['PUT'], strict_slashes=False)
 def update_city(city_id):
     """updates city object"""
     try:

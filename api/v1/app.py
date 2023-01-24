@@ -4,7 +4,7 @@ from models import storage
 from api.v1.views import app_views
 from os import getenv
 from flask import Flask
-from flask import jsonify, request
+from flask import jsonify, request, make_response
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def page_not_found(error):
     """error 404 handler"""
     error_dict = {"error": "Not found"}
     if request.path.startswith('/api/'):
-        return jsonify(error_dict)
+        return make_response(jsonify(error_dict), 404)
 
 
 if __name__ == "__main__":
